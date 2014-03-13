@@ -12,6 +12,21 @@ class Graph:
     is_satisfiable = None   #boolean satisfiability indicator
                             #it is None while it's value not known
     
+    def negateVertex(self, vertex):
+        """Negates vertex
+        Returns vertex
+        with same name from nodes
+        Or creates new node if not found
+        """
+        var = vertex.name
+        if var.find('~') != -1:
+            var = var.lstrip('~')
+        else:
+            var = '~' + var
+        if var not in self.nodes:
+            self.nodes[var] = Vertex(var)
+        return self.nodes[var]
+    
     def __init__(self, expression):
         #transform expression string
         expression = expression.replace('(', ' ')
