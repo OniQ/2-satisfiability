@@ -11,7 +11,10 @@ class Graph:
                             #it can be used to construct graph
     is_satisfiable = None   #boolean satisfiability indicator
                             #it is None while it's value not known
-    
+    stack = []              #stack used by tarjan algorithm
+    index = 0               #used by tarjan algorithm
+    scc_list = []           #strong connected components list
+
     def negateVertex(self, vertex):
         """Negates vertex
         Returns vertex
@@ -57,7 +60,35 @@ class Graph:
                 self.neighbours[_v2] = set()
             self.neighbours[_v2].add(v1)#edge (~y -> x) from (x + y)
             i += 2#move to next clause
-            
+
+    def strong_connect(self, v):
+        v.index = self.index
+        v.lowlink = self.index
+        self.index += 1
+        self.stack.append(v)
+        for w in self.neighbours[v]:
+            if w.index is None:
+                self.strong_connect(w)
+                v.lowlink = min(v.lowlink, w.lowlink)
+            elif w in self.stack:
+                v.lowlink = min(v.lowlink, w.lowlink)
+        if (v.lowlink == v.index):
+            scc = []
+            while True:
+                w = self.stack.pop()
+                if self.negateVertex(w) in scc:
+                    is_satisfiable = False
+                scc.append(w)
+                if w == v:
+                    break
+            self.scc_list.append(scc)
+
+    def tarjan(self):
+        self.is_satisfiable = True
+        for v in self.neighbours.keys():
+            if v.index is None:
+                self.strong_connect(v)
+                
     def get_graph_string(self):
         graph_str = "node : directions\n"
         for k in self.neighbours.keys():
