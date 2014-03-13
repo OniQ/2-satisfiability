@@ -57,3 +57,17 @@ class Graph:
                 self.neighbours[_v2] = set()
             self.neighbours[_v2].add(v1)#edge (~y -> x) from (x + y)
             i += 2#move to next clause
+            
+    def get_graph_string(self):
+        graph_str = "node : directions\n"
+        for k in self.neighbours.keys():
+            graph_str += k.name + " : "
+            for n in self.neighbours[k]:
+                graph_str += n.name + ", "
+            graph_str = graph_str.rstrip(', ')
+            graph_str += '\n'
+        return graph_str
+        
+    def __str__(self):
+        display_str = "%s\n" % (self.get_graph_string())
+        return display_str
