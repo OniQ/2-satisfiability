@@ -24,3 +24,21 @@ class Graph:
         #initialize 'vertices : set of neighbours' dictionary
         for n_key in self.nodes.keys():
             self.neighbours[self.nodes[n_key]] = set()
+        #same expression but with Vertex instead of strings    
+        v_expression = []
+        for v in expression:
+            v_expression.append(self.nodes[v])
+        #create graph edges based on expression clauses
+        i = 0
+        while i < len(v_expression):
+            v1 = v_expression[i]
+            v2 = v_expression[i + 1]
+            _v1 = self.negateVertex(v1)
+            _v2 = self.negateVertex(v2)
+            if _v1 not in self.neighbours:
+                self.neighbours[_v1] = set()
+            self.neighbours[_v1].add(v2)#edge (~x -> y) from (x + y)
+            if _v2 not in self.neighbours:
+                self.neighbours[_v2] = set()
+            self.neighbours[_v2].add(v1)#edge (~y -> x) from (x + y)
+            i += 2#move to next clause
