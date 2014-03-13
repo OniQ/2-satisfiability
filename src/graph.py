@@ -88,7 +88,15 @@ class Graph:
         for v in self.neighbours.keys():
             if v.index is None:
                 self.strong_connect(v)
-                
+
+    def evaluate(self):
+        for scc in self.scc_list:
+            for v in scc:
+                if v.value is None:
+                    v.value = True
+                    opposite = self.negateVertex(v)
+                    opposite.value = False
+
     def get_graph_string(self):
         graph_str = "node : directions\n"
         for k in self.neighbours.keys():
