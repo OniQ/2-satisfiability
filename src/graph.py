@@ -29,7 +29,7 @@ class Graph:
         if var not in self.nodes:
             self.nodes[var] = Vertex(var)
         return self.nodes[var]
-    
+
     def __init__(self, expression):
         #transform expression string
         expression = expression.replace('(', ' ')
@@ -106,7 +106,19 @@ class Graph:
             graph_str = graph_str.rstrip(', ')
             graph_str += '\n'
         return graph_str
-        
+
+    def get_scc_list_string(self):
+        list_str = ""
+        for scc in self.scc_list:
+            list_str += 'Strong connected component %d:\n' % (self.scc_list.index(scc) + 1)
+            for c in scc:
+                list_str += "%s(%s) " % (c.name, c.value)
+            list_str += '\n'*2
+        return list_str
+
     def __str__(self):
-        display_str = "%s\n" % (self.get_graph_string())
+        display_str = "%s\n%sSatisfiable: %s\n" % (self.get_graph_string(),
+                                                   self.get_scc_list_string(),
+												   self.is_satisfiable
+												  )
         return display_str
