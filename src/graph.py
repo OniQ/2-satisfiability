@@ -109,14 +109,23 @@ class Graph:
             for u in c:
                 if c.count(self.negateVertex(u)) > 0:
                     self.is_satisfiable = False;
-        self.evaluate()
+        if self.is_satisfiable:
+            self.evaluate()
 
     def get_graph_string(self, adj):
         graph_str = ""
         for k in adj.keys():
-            graph_str += k.name + " : "
+            if k.name.find('~') == -1:
+                space = " "
+            else:
+                space = ""
+            graph_str += space + k.name + " : "
             for n in adj[k]:
-                graph_str += n.name + ", "
+                if n.name.find('~') == -1:
+                    space = " "
+                else:
+                    space = ""
+                graph_str += space + n.name + ", "
             graph_str = graph_str.rstrip(', ')
             graph_str += '\n'
         return graph_str
@@ -124,8 +133,10 @@ class Graph:
     def __str__(self):
         display_str = ""
         display_str += self.get_graph_string(self.adj) + '\n'
-        display_str += '\n'
-        display_str += self.get_scc_list_string() + '\n'
+        #display_str += self.get_scc_list_string() + '\n'
+        display_str += '---------------\n'
+        display_str += self.get_scc_list_simple_string()
+        display_str += '---------------\n\n'
         if self.is_satisfiable:
             display_str += "Satisfiable"
         else:
@@ -146,5 +157,20 @@ class Graph:
             for v in c:
                 component += v.name + "{" + str(v.value) + "} "
             display_str += 'C' + str(i) + ': ' + component + '\n'
+        return display_str
+    
+    def get_scc_list_simple_string(self):
+        i = 0
+        display_str = ""
+        for c in self.scc:
+            i += 1
+            component = ""
+            for v in c:
+                if v.name.find('~') == -1:
+                    space = " "
+                else:
+                    space = ""
+                component += space + v.name + "  "
+            display_str += component + '\n'
         return display_str
 		
